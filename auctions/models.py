@@ -18,3 +18,10 @@ class Auction(models.Model):
 
     def __str__(self):
         return f"{self.title} from {self.start_date} to {self.end_date}"
+
+class Bid(models.Model):
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="mine_bids")
+    auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
+    date = models.DateTimeField()
+    is_active = models.BooleanField()
