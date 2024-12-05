@@ -39,7 +39,7 @@ class Bid(models.Model):
         return f"{self.pk} - {self.value} - {self.date}"
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     comment = models.CharField(max_length=500)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
