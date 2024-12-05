@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from enum import auto
 
 
 class User(AbstractUser):
@@ -37,3 +36,18 @@ class Bid(models.Model):
 
     def __str__(self):
         return f"{self.pk} - {self.value} - {self.date}"
+
+
+class Comments(models.Model):
+    comment = models.CharField(max_length=500)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
+    date = models.DateTimeField()
+    is_removed = models.BooleanField()
+    upvotes = models.IntegerField()
+    downvotes = models.IntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['comment', 'user', 'auction', 'date'], name='unique_comment_auction_constraint')
+        ]
