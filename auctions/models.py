@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from ast import slice
 
 
 class User(AbstractUser):
@@ -47,7 +48,20 @@ class Comments(models.Model):
     upvotes = models.IntegerField()
     downvotes = models.IntegerField()
 
+    def __str__(self):
+        return f"{self.pk} - {self.comment} - {self.date}"
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['comment', 'user', 'auction', 'date'], name='unique_comment_auction_constraint')
+        ]
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
+    date = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'auction'], name='unique_watchlist_auction_constraint')
         ]
