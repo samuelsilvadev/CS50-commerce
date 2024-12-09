@@ -20,7 +20,7 @@ class Auction(models.Model):
     end_date = models.DateTimeField()
     is_active = models.BooleanField(null=True)
     minimum_bid_value = models.DecimalField(max_digits=10, decimal_places=2)
-    winner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="auctions_won")
+    winner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="auctions_won",null=True)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="mine_auctions")
     category = models.ManyToManyField(Category)
 
