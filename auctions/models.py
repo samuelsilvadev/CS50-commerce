@@ -17,7 +17,7 @@ class Auction(models.Model):
     description = models.CharField(max_length=5000)
     image_url = models.URLField()
     start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(null=True)
     is_active = models.BooleanField(null=True)
     minimum_bid_value = models.DecimalField(max_digits=10, decimal_places=2)
     winner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="auctions_won",null=True)
