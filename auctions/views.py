@@ -50,8 +50,7 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {
-                    "message": "Passwords must match."}
+                request, "auctions/register.html", {"message": "Passwords must match."}
             )
 
         # Attempt to create new user
@@ -110,7 +109,11 @@ def listing_entry(request, id):
 
     highest_bid = Bid.get_highest_bid(auction=auction)
 
-    return render(request, "auctions/details.html", {"auction": auction, "highest_bid": highest_bid})
+    return render(
+        request,
+        "auctions/details.html",
+        {"auction": auction, "highest_bid": highest_bid},
+    )
 
 
 def place_bid(request, id):
@@ -127,7 +130,7 @@ def place_bid(request, id):
             user=request.user,
             value=target_bid_value,
             date=timezone.now(),
-            is_active=True
+            is_active=True,
         )
 
         bid.save()
@@ -136,7 +139,11 @@ def place_bid(request, id):
 
     highest_bid = Bid.get_highest_bid(auction=auction)
 
-    return render(request, "auctions/details.html", {"auction": auction, "highest_bid": highest_bid})
+    return render(
+        request,
+        "auctions/details.html",
+        {"auction": auction, "highest_bid": highest_bid},
+    )
 
 
 def not_found(request):

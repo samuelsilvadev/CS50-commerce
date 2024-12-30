@@ -47,7 +47,11 @@ class Bid(models.Model):
         return f"{self.pk} - {self.value} - {self.date}"
 
     def get_highest_bid(auction):
-        return Bid.objects.filter(auction=auction, is_active=True).order_by("-value").first()
+        return (
+            Bid.objects.filter(auction=auction, is_active=True)
+            .order_by("-value")
+            .first()
+        )
 
 
 class Comment(models.Model):
