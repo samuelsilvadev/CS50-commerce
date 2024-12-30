@@ -69,7 +69,7 @@
         <div class="form-group">
             <select name="category" class="form-control" multiple required>
                 <option value="" selected disabled>Category</option>
-                {% for category in catogories %}
+                {% for category in categories %}
                 <option value="{{ category.pk }}">
                     {{ category.description }}
                 </option>

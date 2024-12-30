@@ -97,7 +97,7 @@ def new_listing(request):
 
         return HttpResponseRedirect(reverse("index"))
 
-    return render(request, "auctions/new.html", {"catogories": Category.objects.all()})
+    return render(request, "auctions/new.html", {"categories": Category.objects.all()})
 
 
 def listing_entry(request, id):
