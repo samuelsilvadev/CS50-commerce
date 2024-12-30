@@ -102,3 +102,7 @@ def new_listing(request):
 
 def listing_entry(request, id):
     return render(request, "auctions/new.html", {"catogories": Category.objects.all()})
+
+
+def not_found(request):
+    return render(request, "auctions/404.html")
