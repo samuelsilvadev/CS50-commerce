@@ -5,18 +5,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auctions', '0005_remove_category_auction'),
+        ("auctions", "0005_remove_category_auction"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CategoryAuction',
+            name="CategoryAuction",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('auction', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.auction')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "auction",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="auctions.auction",
+                    ),
+                ),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="auctions.category",
+                    ),
+                ),
             ],
         ),
     ]

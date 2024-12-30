@@ -4,18 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auctions', '0006_categoryauction'),
+        ("auctions", "0006_categoryauction"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='auction',
-            name='category',
-            field=models.ManyToManyField(to='auctions.category'),
+            model_name="auction",
+            name="category",
+            field=models.ManyToManyField(to="auctions.category"),
         ),
         migrations.DeleteModel(
-            name='CategoryAuction',
+            name="CategoryAuction",
         ),
     ]

@@ -5,19 +5,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auctions', '0003_bid'),
+        ("auctions", "0003_bid"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.CharField(max_length=255, unique=True)),
-                ('is_active', models.BooleanField()),
-                ('auction', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.auction')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("description", models.CharField(max_length=255, unique=True)),
+                ("is_active", models.BooleanField()),
+                (
+                    "auction",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="auctions.auction",
+                    ),
+                ),
             ],
         ),
     ]

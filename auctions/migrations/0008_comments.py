@@ -6,26 +6,50 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auctions', '0007_auction_category_delete_categoryauction'),
+        ("auctions", "0007_auction_category_delete_categoryauction"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Comments',
+            name="Comments",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('comment', models.CharField(max_length=500)),
-                ('date', models.DateTimeField()),
-                ('is_removed', models.BooleanField()),
-                ('upvotes', models.IntegerField()),
-                ('downvotes', models.IntegerField()),
-                ('auction', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.auction')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("comment", models.CharField(max_length=500)),
+                ("date", models.DateTimeField()),
+                ("is_removed", models.BooleanField()),
+                ("upvotes", models.IntegerField()),
+                ("downvotes", models.IntegerField()),
+                (
+                    "auction",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="auctions.auction",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('comment', 'user', 'auction', 'date'), name='unique_comment_auction_constraint')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("comment", "user", "auction", "date"),
+                        name="unique_comment_auction_constraint",
+                    )
+                ],
             },
         ),
     ]

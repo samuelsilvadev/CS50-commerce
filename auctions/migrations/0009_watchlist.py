@@ -6,22 +6,46 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('auctions', '0008_comments'),
+        ("auctions", "0008_comments"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Watchlist',
+            name="Watchlist",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateTimeField()),
-                ('auction', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='auctions.auction')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("date", models.DateTimeField()),
+                (
+                    "auction",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="auctions.auction",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('user', 'auction'), name='unique_watchlist_auction_constraint')],
+                "constraints": [
+                    models.UniqueConstraint(
+                        fields=("user", "auction"),
+                        name="unique_watchlist_auction_constraint",
+                    )
+                ],
             },
         ),
     ]

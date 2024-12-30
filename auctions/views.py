@@ -10,14 +10,11 @@ from .models import Auction, User, Category
 def index(request):
     auctions = Auction.objects.filter(is_active=True)
 
-    return render(request, "auctions/index.html", {
-        "auctions": auctions
-    })
+    return render(request, "auctions/index.html", {"auctions": auctions})
 
 
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -28,9 +25,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(
+                request,
+                "auctions/login.html",
+                {"message": "Invalid username and/or password."},
+            )
     else:
         return render(request, "auctions/login.html")
 
@@ -49,18 +48,20 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(
+                request, "auctions/register.html", {"message": "Passwords must match."}
+            )
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
+            return render(
+                request,
+                "auctions/register.html",
+                {"message": "Username already taken."},
+            )
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -68,16 +69,15 @@ def register(request):
 
 
 def new_listing(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        image_url = request.POST.get('image_url')
-        start_date = request.POST.get('start_date')
-        end_date = request.POST.get('end_date')
-        minimum_bid_value = request.POST.get('minimum_bid_value')
-        category_ids = request.POST.getlist('category')
-        is_active = request.POST.get('is_active') == 'on'
-        print(request.POST)
+    if request.method == "POST":
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+        image_url = request.POST.get("image_url")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        minimum_bid_value = request.POST.get("minimum_bid_value")
+        category_ids = request.POST.getlist("category")
+        is_active = request.POST.get("is_active") == "on"
 
         auction = Auction(
             title=title,
@@ -87,7 +87,7 @@ def new_listing(request):
             end_date=end_date,
             minimum_bid_value=minimum_bid_value,
             owner=request.user,
-            is_active=is_active
+            is_active=is_active,
         )
 
         auction.save()
@@ -97,12 +97,8 @@ def new_listing(request):
 
         return HttpResponseRedirect(reverse("index"))
 
-    return render(request, "auctions/new.html", {
-        "catogories": Category.objects.all()
-    })
+    return render(request, "auctions/new.html", {"catogories": Category.objects.all()})
 
 
 def listing_entry(request, id):
-    return render(request, "auctions/new.html", {
-        "catogories": Category.objects.all()
-    })
+    return render(request, "auctions/new.html", {"catogories": Category.objects.all()})
