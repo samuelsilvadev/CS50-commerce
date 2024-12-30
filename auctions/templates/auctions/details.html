@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+    .auction {
+        display: grid ;
+        grid-template-columns: 1fr 40%;
+        grid-template-rows: repeat(2, auto);
+        row-gap: 16px;
+        column-gap: 32px;
+    }
+
+    .bid {
+        grid-column: 1 / -1;
+        grid-row: 1 / 2;
+    }
+</style>
+
+<main class="container auction">
+    {% if highest_bid %}
+        <div class="alert alert-primary mb-0 bid" role="alert">
+            <p class="h6 font-weight-bold text-dark mb-0">Highest Bid: {{ highest_bid.value }}</p>
+        </div>
+    {% endif %}
+    <div>
+        <h2>{{ auction.title }}</h2>
+        <div class="position-relative w-100 h-48 mb-3">
+            <img src="{{ auction.image_url }}" alt="{{ title }}" height="200" class="img-fluid rounded">
+        </div>
+        <ul class="list-unstyled mb-2">
+            {% for category in auction.category.all %}
+                <li class="badge badge-secondary">
+                    {{ category.description }}
+                </li>
+            {% endfor %}
+        </ul>
+        <h3 class="text-muted mb-2 text-truncate text-dark">{{ auction.description }}</h3>
+        <p class="text-muted mb-2 text-truncate text-dark">Start on: {{ auction.start_date }} and end on: {{ auction.end_date }}</p>
+    </div>
+    <div>
+    </div>
+</main>
+{% endblock %}

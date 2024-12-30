@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Auction, User, Category
+from .models import Auction, User, Category, Bid
 
 
 def index(request):
@@ -49,7 +49,8 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {"message": "Passwords must match."}
+                request, "auctions/register.html", {
+                    "message": "Passwords must match."}
             )
 
         # Attempt to create new user
@@ -101,7 +102,15 @@ def new_listing(request):
 
 
 def listing_entry(request, id):
-    return render(request, "auctions/new.html", {"catogories": Category.objects.all()})
+    auction = Auction.objects.filter(id=id).first()
+
+    if auction is None:
+        return HttpResponseRedirect(reverse("not_found"))
+
+    highest_bid = Bid.objects.filter(
+        auction=auction, is_active=True).order_by("-value").first()
+
+    return render(request, "auctions/details.html", {"auction": auction, "highest_bid": highest_bid})
 
 
 def not_found(request):
