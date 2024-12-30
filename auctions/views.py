@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 
 from .models import Auction, User, Category, Bid
 
@@ -107,8 +108,33 @@ def listing_entry(request, id):
     if auction is None:
         return HttpResponseRedirect(reverse("not_found"))
 
-    highest_bid = Bid.objects.filter(
-        auction=auction, is_active=True).order_by("-value").first()
+    highest_bid = Bid.get_highest_bid(auction=auction)
+
+    return render(request, "auctions/details.html", {"auction": auction, "highest_bid": highest_bid})
+
+
+def place_bid(request, id):
+    auction = Auction.objects.filter(id=id).first()
+
+    if auction is None:
+        return HttpResponseRedirect(reverse("not_found"))
+
+    if request.method == "POST":
+        target_bid_value = request.POST.get("bid")
+
+        bid = Bid(
+            auction=auction,
+            user=request.user,
+            value=target_bid_value,
+            date=timezone.now(),
+            is_active=True
+        )
+
+        bid.save()
+
+        return HttpResponseRedirect(reverse("listing_entry", args=[id]))
+
+    highest_bid = Bid.get_highest_bid(auction=auction)
 
     return render(request, "auctions/details.html", {"auction": auction, "highest_bid": highest_bid})
 

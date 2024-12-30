@@ -46,6 +46,9 @@ class Bid(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.value} - {self.date}"
 
+    def get_highest_bid(auction):
+        return Bid.objects.filter(auction=auction, is_active=True).order_by("-value").first()
+
 
 class Comment(models.Model):
     comment = models.CharField(max_length=500)
