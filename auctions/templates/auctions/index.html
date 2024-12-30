@@ -1,18 +1,49 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+<style>
+    :is(.no-hover, .no-hover:hover, .no-hover *:hover) {
+        text-decoration: none;
+    }
 
-    <ul>
+    .active-auctions {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+        grid-template-rows: masonry;
+        gap: 16px;
+    }
+
+    @media (min-width: 1024px) {
+        .active-auctions {
+            grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+        }
+    }
+</style>
+
+<main class="container">
+    <h1 class="sr-only">Active Auctions</h1>
+
+    <ul class="list-unstyled active-auctions">
         {% for auction in auctions %}
             <li>
-                <a href="{% url 'listing_entry' auction.id %}">{{ auction.title }}</a>
-                <ul>
-                    <li>Price: ${{ auction.price }}</li>
-                    <li>Category: {{ auction.category.name }}</li>
-                    <li>Created by: {{ auction.created_by }}</li>
-                </ul>
+                <a href="{% url 'listing_entry' auction.id %}" class="d-block p-3 bg-white rounded shadow-sm hover-shadow transition-shadow no-hover">
+                    {% if auction.image_url %}
+                        <div class="position-relative w-100 h-48 mb-3">
+                            <img src="{{ auction.image_url }}" alt="{{ title }}" height="200" class="img-fluid rounded">
+                        </div>
+                    {% else %}
+                        <div class="position-relative w-100 h-48 mb-3">
+                            <img src=" https://placehold.in/300x200@2x.png" height="200" alt="{{ title }}" class="img-fluid rounded">
+                        </div>
+                    {% endif %}
+
+                    <h2 class="h5 font-weight-semibold mb-2 text-dark">{{ auction.title }}</h2>
+                    <p class="text-muted mb-2 text-truncate text-dark">{{ auction.description }}</p>
+                    <p class="h6 font-weight-bold text-dark">Minimum Bid: ${{ auction.minimum_bid_value }}</p>
+                </a>
             </li>
         {% endfor %}
     </ul>
+</main>
+
 {% endblock %}
