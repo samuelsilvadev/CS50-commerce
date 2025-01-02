@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 
-from .models import Auction, User, Category, Bid
+from .models import Auction, User, Category, Bid, Watchlist
 
 
 def index(request):
@@ -50,7 +50,8 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {"message": "Passwords must match."}
+                request, "auctions/register.html", {
+                    "message": "Passwords must match."}
             )
 
         # Attempt to create new user
@@ -108,11 +109,13 @@ def listing_entry(request, id):
         return HttpResponseRedirect(reverse("not_found"))
 
     highest_bid = Bid.get_highest_bid(auction=auction)
+    is_watched = Watchlist.is_watched(
+        auction=auction, user=request.user) if request.user is not None and request.user.is_authenticated else False
 
     return render(
         request,
         "auctions/details.html",
-        {"auction": auction, "highest_bid": highest_bid},
+        {"auction": auction, "highest_bid": highest_bid, "is_watched": is_watched},
     )
 
 
@@ -148,3 +151,31 @@ def place_bid(request, id):
 
 def not_found(request):
     return render(request, "auctions/404.html")
+
+
+def watchlist(request):
+    watchlist_entries = Watchlist.objects.filter(user=request.user)
+
+    return render(request, "auctions/watchlist.html", {"entries": watchlist_entries})
+
+
+def toggle_watchlist(request, auction_id):
+    if request.method == "POST":
+        auction = Auction.objects.filter(id=auction_id).first()
+
+        if auction is None:
+            return HttpResponseRedirect(reverse("not_found"))
+
+        watched_entry = Watchlist.objects.filter(
+            user=request.user, auction=auction).first()
+
+        if watched_entry is not None:
+            watched_entry.delete()
+        else:
+            watchlist_entry = Watchlist(
+                user=request.user, auction=auction, date=timezone.now())
+            watchlist_entry.save()
+
+        return HttpResponseRedirect(reverse("listing_entry", args=[auction_id]))
+
+    return HttpResponseRedirect(reverse("not_found"))

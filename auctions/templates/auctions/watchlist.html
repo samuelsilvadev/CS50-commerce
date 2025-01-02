@@ -1,0 +1,37 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<main class="container auction">
+    <h2>My favorites</h2>
+
+    <ul class="list-unstyled active-auctions">
+        {% for entry in entries %}
+            <li>
+                <a href="{% url 'listing_entry' entry.auction.id %}" class="d-block p-3 bg-white rounded shadow-sm hover-shadow transition-shadow no-hover">
+                    {% if entry.auction.image_url %}
+                        <div class="position-relative w-100 h-48 mb-3">
+                            <img src="{{ entry.auction.image_url }}" alt="{{ title }}" height="200" class="img-fluid rounded">
+                        </div>
+                    {% else %}
+                        <div class="position-relative w-100 h-48 mb-3">
+                            <img src=" https://placehold.in/300x200@2x.png" height="200" alt="{{ entry.title }}" class="img-fluid rounded">
+                        </div>
+                    {% endif %}
+
+                    <h2 class="h5 font-weight-semibold mb-2 text-dark">{{ entry.auction.title }}</h2>
+                    <p class="text-muted mb-2 text-truncate text-dark">{{ entry.auction.description }}</p>
+                    <p class="h6 font-weight-bold text-dark">Minimum Bid: ${{ entry.auction.minimum_bid_value }}</p>
+                </a>
+            </li>
+        {% empty %}
+            <li>
+                <p>No auctions saved yet.</p>
+                <a href="{% url 'index' %}">Return to the home page to look for some items</a>
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+
+
+{% endblock %}

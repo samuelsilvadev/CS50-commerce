@@ -1,24 +1,6 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-<style>
-    :is(.no-hover, .no-hover:hover, .no-hover *:hover) {
-        text-decoration: none;
-    }
-
-    .active-auctions {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
-        grid-template-rows: masonry;
-        gap: 16px;
-    }
-
-    @media (min-width: 1024px) {
-        .active-auctions {
-            grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
-        }
-    }
-</style>
 
 <main class="container">
     <h1 class="sr-only">Active Auctions</h1>

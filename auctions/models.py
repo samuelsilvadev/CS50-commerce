@@ -80,6 +80,9 @@ class Watchlist(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
     date = models.DateTimeField()
 
+    def is_watched(user, auction):
+        return Watchlist.objects.filter(user=user, auction=auction).exists()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
