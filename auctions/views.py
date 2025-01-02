@@ -9,9 +9,17 @@ from .models import Auction, User, Category, Bid, Watchlist
 
 
 def index(request):
-    auctions = Auction.objects.filter(is_active=True)
+    category_id = request.GET.get('category')
 
-    return render(request, "auctions/index.html", {"auctions": auctions})
+    category = Category.objects.filter(
+        pk=category_id).first() if category_id is not None else None
+
+    if category is not None:
+        auctions = Auction.objects.filter(is_active=True, category=category)
+    else:
+        auctions = Auction.objects.filter(is_active=True)
+
+    return render(request, "auctions/index.html", {"auctions": auctions, "category": category})
 
 
 def login_view(request):

@@ -41,7 +41,9 @@
         <ul class="list-unstyled mb-2">
             {% for category in auction.category.all %}
                 <li class="badge badge-secondary">
-                    {{ category.description }}
+                    <a href="{% url 'index' %}?category={{ category.id }}" class="text-light no-hover">
+                        {{ category.description }}
+                    </a>
                 </li>
             {% endfor %}
         </ul>

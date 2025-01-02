@@ -5,6 +5,13 @@
 <main class="container">
     <h1 class="sr-only">Active Auctions</h1>
 
+    {% if category %}
+        <div class="d-flex align-items-center">
+            <h2 class="mr-2">Showing results for: {{ category.description }}</h2>
+            <a href="{% url 'index' %}">Clear query</a>
+        </div>
+    {% endif %}
+
     <ul class="list-unstyled active-auctions">
         {% for auction in auctions %}
             <li>
