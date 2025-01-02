@@ -6,3 +6,5 @@ def count_context(request):
         count = Watchlist.objects.filter(user=request.user).count()
 
         return {"watchlist_count": count}
+
+    return {}
