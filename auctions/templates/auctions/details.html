@@ -24,9 +24,16 @@
     {% endif %}
     <div>
         <h2>{{ auction.title }}</h2>
-        <div class="position-relative w-100 h-48 mb-3">
-            <img src="{{ auction.image_url }}" alt="{{ title }}" height="200" class="img-fluid rounded">
-        </div>
+        {% if auction.image_url %}
+            <div class="position-relative w-100 h-48 mb-3">
+                <img src="{{ auction.image_url }}" alt="{{ title }}" height="200" class="img-fluid rounded">
+            </div>
+        {% else %}
+            <div class="position-relative w-100 h-48 mb-3">
+                <img src=" https://placehold.in/300x200@2x.png" height="200" alt="{{ title }}" class="img-fluid rounded">
+            </div>
+        {% endif %}
+
         <ul class="list-unstyled mb-2">
             {% for category in auction.category.all %}
                 <li class="badge badge-secondary">
