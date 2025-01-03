@@ -52,19 +52,28 @@
     </div>
     <div>
         {% if user.is_authenticated %}
-            <form action="{% url 'place_bid' auction.id %}" method="post" class="d-flex align-items-end w-100 mb-20">
-                {% csrf_token %}
-                <div class="form-group mb-0 mr-2 flex-grow-1">
-                    <label for="bid">Place a bid</label>
+            <div class="d-flex flex-column">
+                {% if place_bid_error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ place_bid_error }}
+                    </div>
+                {% endif %}
+                <form action="{% url 'place_bid' auction.id %}" method="post" class="d-flex align-items-end w-100 mb-20">
+                    {% csrf_token %}
 
-                    {% if highest_bid %}
-                        <input class="form-control" type="text" name="bid" id="bid" placeholder="Minimum Bid: {{ highest_bid.value }}" required>
-                    {% else %}
-                        <input class="form-control" type="text" name="bid" id="bid" placeholder="Minimum Bid: {{ auction.minimum_bid_value }}" required>
-                    {% endif %}
-                </div>
-                <button class="btn btn-light">Bid</button>
-            </form>
+
+                    <div class="form-group mb-0 mr-2 flex-grow-1">
+                        <label for="bid">Place a bid</label>
+
+                        {% if highest_bid %}
+                            <input class="form-control" type="text" name="bid" id="bid" placeholder="Minimum Bid: {{ highest_bid.value }}" required>
+                        {% else %}
+                            <input class="form-control" type="text" name="bid" id="bid" placeholder="Minimum Bid: {{ auction.minimum_bid_value }}" required>
+                        {% endif %}
+                    </div>
+                    <button class="btn btn-light">Bid</button>
+                </form>
+            </div>
             <form action="{% url 'toggle_watchlist' auction.id %}" method="post">
                 {% csrf_token %}
                 

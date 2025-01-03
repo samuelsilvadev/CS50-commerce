@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+from decimal import Decimal
 
 from .models import Auction, User, Category, Bid, Watchlist
 
@@ -133,8 +134,32 @@ def place_bid(request, id):
     if auction is None:
         return HttpResponseRedirect(reverse("not_found"))
 
+    highest_bid = Bid.get_highest_bid(auction=auction)
+
     if request.method == "POST":
-        target_bid_value = request.POST.get("bid")
+        target_bid_value = Decimal(request.POST.get("bid"))
+
+        if highest_bid is not None and target_bid_value <= highest_bid.value:
+            return render(
+                request,
+                "auctions/details.html",
+                {
+                    "auction": auction,
+                    "highest_bid": highest_bid,
+                    "place_bid_error": f'Your offer must be bigger than the latest bid: {highest_bid.value}'
+                },
+            )
+
+        if highest_bid is None and target_bid_value <= auction.minimum_bid_value:
+            return render(
+                request,
+                "auctions/details.html",
+                {
+                    "auction": auction,
+                    "highest_bid": highest_bid,
+                    "place_bid_error": f'Your offer must be bigger than the minimum bid value: {auction.minimum_bid_value}'
+                },
+            )
 
         bid = Bid(
             auction=auction,
@@ -147,8 +172,6 @@ def place_bid(request, id):
         bid.save()
 
         return HttpResponseRedirect(reverse("listing_entry", args=[id]))
-
-    highest_bid = Bid.get_highest_bid(auction=auction)
 
     return render(
         request,
