@@ -16,6 +16,7 @@ urlpatterns = [
         views.close_auction,
         name="close_auction",
     ),
+    path("listing/details/comment/<int:id>", views.comment, name="comment"),
     path("404", views.not_found, name="not_found"),
     path("watchlist", views.watchlist, name="watchlist"),
     path(

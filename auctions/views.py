@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from decimal import Decimal
 
-from .models import Auction, User, Category, Bid, Watchlist
+from .models import Auction, User, Category, Bid, Watchlist, Comment
 
 
 def index(request):
@@ -138,6 +138,9 @@ def listing_entry(request, id):
     is_winner = (
         auction.winner.pk == request.user.pk if auction.winner is not None else False
     )
+    comments = Comment.objects.filter(auction=auction, is_removed=False).order_by(
+        "-date"
+    )
 
     return render(
         request,
@@ -148,6 +151,7 @@ def listing_entry(request, id):
             "is_watched": is_watched,
             "is_owner": is_owner,
             "is_winner": is_winner,
+            "comments": comments,
         },
     )
 
@@ -256,4 +260,22 @@ def close_auction(request, id):
         auction.is_active = False
         auction.save()
 
-        return HttpResponseRedirect(reverse("listing_entry", args=[auction_id]))
+        return HttpResponseRedirect(reverse("listing_entry", args=[id]))
+
+
+def comment(request, id):
+    if request.method == "POST":
+        auction = Auction.objects.filter(id=id).first()
+
+        if auction is None:
+            return HttpResponseRedirect(reverse("not_found"))
+
+        text = request.POST.get("comment")
+
+        comment = Comment(
+            comment=text, user=request.user, auction=auction, date=timezone.now()
+        )
+
+        comment.save()
+
+    return HttpResponseRedirect(reverse("listing_entry", args=[id]))

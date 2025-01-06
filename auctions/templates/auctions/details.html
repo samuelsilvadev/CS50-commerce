@@ -5,7 +5,7 @@
     .auction {
         display: grid ;
         grid-template-columns: 1fr 40%;
-        grid-template-rows: repeat(2, auto);
+        grid-template-rows: repeat(2, auto, auto);
         row-gap: 16px;
         column-gap: 32px;
     }
@@ -15,8 +15,26 @@
         grid-row: 1 / 2;
     }
 
+    .comments {
+        grid-column: 1 / -1;
+        grid-row: 3 / 4;
+    }
+
     .mb-20 {
         margin-bottom: 20px;
+    }
+
+    .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .comment-card {
+        & header {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 </style>
 
@@ -106,5 +124,36 @@
             </form>
         {% endif %}
     </div>
+    <section class="comments">
+        <hr>
+        <h3 class="sr-only">Comments</h3>
+        {% if user.is_authenticated %}
+            <form action="{% url 'comment' auction.id %}" method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="new-comment">Write a new comment</label>
+                    <textarea class="form-control" rows="2" id="new-comment" maxlength="500" name="comment" required></textarea>
+                </div>
+                <button class="btn btn-light" type="submit">Send</button>
+            </form>
+        {% endif %}
+
+        <ul class="list-unstyled mb-2 comments">
+            {% for comment in comments %}
+                <li>
+                    <section class="comment-card card">
+                        <div class="card-body">
+                            <header class="card-title">
+                                <p class="mb-0">{{ comment.user }}</p>
+                                <p class="mb-0">{{ comment.date }}</p>
+                            </header>
+                            <p class="mb-0">{{ comment.comment }}</p>
+                        </div>
+                    </section>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 </main>
 {% endblock %}
