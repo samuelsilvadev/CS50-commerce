@@ -59,9 +59,9 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     auction = models.ForeignKey(Auction, on_delete=models.DO_NOTHING)
     date = models.DateTimeField()
-    is_removed = models.BooleanField()
-    upvotes = models.IntegerField()
-    downvotes = models.IntegerField()
+    is_removed = models.BooleanField(default=False)
+    upvotes = models.IntegerField(default=0)
+    downvotes = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.pk} - {self.comment} - {self.date}"
