@@ -28,6 +28,13 @@ def index(request):
     )
 
 
+def auctions_won(request):
+    user = request.user
+    auctions = Auction.objects.filter(winner=user)
+
+    return render(request, "auctions/index.html", {"auctions": auctions})
+
+
 def login_view(request):
     if request.method == "POST":
         # Attempt to sign user in
