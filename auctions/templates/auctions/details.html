@@ -74,7 +74,7 @@
     </div>
     <div>
         {% if user.is_authenticated %}
-            {% if is_owner %}
+            {% if is_owner and auction.is_active %}
                 <div class="d-flex flex-column">
                     {% if close_auction_error %}
                         <div class="alert alert-danger" role="alert">
