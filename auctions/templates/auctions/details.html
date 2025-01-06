@@ -21,7 +21,11 @@
 </style>
 
 <main class="container auction">
-    {% if highest_bid %}
+    {% if is_winner %}
+        <div class="alert alert-success mb-0 bid" role="alert">
+            <p class="h6 font-weight-bold text-dark mb-0">Congratulations your bid won this auction. You'll soon contact you to arrange the next steps.</p>
+        </div>
+    {% elif highest_bid  %}
         <div class="alert alert-primary mb-0 bid" role="alert">
             <p class="h6 font-weight-bold text-dark mb-0">Highest Bid: {{ highest_bid.value }}</p>
         </div>
@@ -52,15 +56,32 @@
     </div>
     <div>
         {% if user.is_authenticated %}
+            {% if is_owner %}
+                <div class="d-flex flex-column">
+                    {% if close_auction_error %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ close_auction_error }}
+                        </div>
+                    {% endif %}
+                    <form action="{% url 'close_auction' auction.id %}" method="post" class="d-flex align-items-end w-100 mb-20">
+                        {% csrf_token %}
+                        <button class="btn btn-danger w-100">Close Auction</button>
+                    </form>
+                </div>
+            {% endif %}
             <div class="d-flex flex-column">
                 {% if place_bid_error %}
                     <div class="alert alert-danger" role="alert">
                         {{ place_bid_error }}
                     </div>
                 {% endif %}
-                <form action="{% url 'place_bid' auction.id %}" method="post" class="d-flex align-items-end w-100 mb-20">
+                <form
+                    action="{% url 'place_bid' auction.id %}"
+                    method="post"
+                    class="d-flex align-items-end w-100 mb-20"
+                    {% if not auction.is_active %} disabled {% endif %}
+                    >
                     {% csrf_token %}
-
 
                     <div class="form-group mb-0 mr-2 flex-grow-1">
                         <label for="bid">Place a bid</label>

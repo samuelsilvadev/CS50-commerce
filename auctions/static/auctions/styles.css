@@ -18,3 +18,9 @@ body {
         grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
     }
 }
+
+form[disabled] :where(label, input, button) {
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.5;
+}

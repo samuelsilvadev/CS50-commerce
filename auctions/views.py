@@ -10,17 +10,22 @@ from .models import Auction, User, Category, Bid, Watchlist
 
 
 def index(request):
-    category_id = request.GET.get('category')
+    category_id = request.GET.get("category")
 
-    category = Category.objects.filter(
-        pk=category_id).first() if category_id is not None else None
+    category = (
+        Category.objects.filter(pk=category_id).first()
+        if category_id is not None
+        else None
+    )
 
     if category is not None:
         auctions = Auction.objects.filter(is_active=True, category=category)
     else:
         auctions = Auction.objects.filter(is_active=True)
 
-    return render(request, "auctions/index.html", {"auctions": auctions, "category": category})
+    return render(
+        request, "auctions/index.html", {"auctions": auctions, "category": category}
+    )
 
 
 def login_view(request):
@@ -59,8 +64,7 @@ def register(request):
         confirmation = request.POST["confirmation"]
         if password != confirmation:
             return render(
-                request, "auctions/register.html", {
-                    "message": "Passwords must match."}
+                request, "auctions/register.html", {"message": "Passwords must match."}
             )
 
         # Attempt to create new user
@@ -118,13 +122,26 @@ def listing_entry(request, id):
         return HttpResponseRedirect(reverse("not_found"))
 
     highest_bid = Bid.get_highest_bid(auction=auction)
-    is_watched = Watchlist.is_watched(
-        auction=auction, user=request.user) if request.user is not None and request.user.is_authenticated else False
+    is_watched = (
+        Watchlist.is_watched(auction=auction, user=request.user)
+        if request.user is not None and request.user.is_authenticated
+        else False
+    )
+    is_owner = auction.owner.pk == request.user.pk
+    is_winner = (
+        auction.winner.pk == request.user.pk if auction.winner is not None else False
+    )
 
     return render(
         request,
         "auctions/details.html",
-        {"auction": auction, "highest_bid": highest_bid, "is_watched": is_watched},
+        {
+            "auction": auction,
+            "highest_bid": highest_bid,
+            "is_watched": is_watched,
+            "is_owner": is_owner,
+            "is_winner": is_winner,
+        },
     )
 
 
@@ -135,6 +152,7 @@ def place_bid(request, id):
         return HttpResponseRedirect(reverse("not_found"))
 
     highest_bid = Bid.get_highest_bid(auction=auction)
+    is_owner = auction.owner.pk == request.user.pk
 
     if request.method == "POST":
         target_bid_value = Decimal(request.POST.get("bid"))
@@ -146,7 +164,8 @@ def place_bid(request, id):
                 {
                     "auction": auction,
                     "highest_bid": highest_bid,
-                    "place_bid_error": f'Your offer must be bigger than the latest bid: {highest_bid.value}'
+                    "is_owner": is_owner,
+                    "place_bid_error": f"Your offer must be bigger than the latest bid: {highest_bid.value}",
                 },
             )
 
@@ -157,7 +176,8 @@ def place_bid(request, id):
                 {
                     "auction": auction,
                     "highest_bid": highest_bid,
-                    "place_bid_error": f'Your offer must be bigger than the minimum bid value: {auction.minimum_bid_value}'
+                    "is_owner": is_owner,
+                    "place_bid_error": f"Your offer must be bigger than the minimum bid value: {auction.minimum_bid_value}",
                 },
             )
 
@@ -198,15 +218,35 @@ def toggle_watchlist(request, auction_id):
             return HttpResponseRedirect(reverse("not_found"))
 
         watched_entry = Watchlist.objects.filter(
-            user=request.user, auction=auction).first()
+            user=request.user, auction=auction
+        ).first()
 
         if watched_entry is not None:
             watched_entry.delete()
         else:
             watchlist_entry = Watchlist(
-                user=request.user, auction=auction, date=timezone.now())
+                user=request.user, auction=auction, date=timezone.now()
+            )
             watchlist_entry.save()
 
         return HttpResponseRedirect(reverse("listing_entry", args=[auction_id]))
 
     return HttpResponseRedirect(reverse("not_found"))
+
+
+def close_auction(request, id):
+    if request.method == "POST":
+        auction = Auction.objects.filter(id=id).first()
+
+        if auction is None:
+            return HttpResponseRedirect(reverse("not_found"))
+
+        highest_bid = Bid.get_highest_bid(auction=auction)
+
+        if highest_bid is not None:
+            auction.winner = highest_bid.user
+
+        auction.is_active = False
+        auction.save()
+
+        return HttpResponseRedirect(reverse("listing_entry", args=[auction_id]))
