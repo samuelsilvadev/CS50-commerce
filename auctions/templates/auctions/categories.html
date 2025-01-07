@@ -1,0 +1,28 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<main class="container">
+    <h1 class="sr-only">Current Categories</h1>
+
+    <ul class="list-unstyled">
+        {% for category in categories %}
+            <li>
+
+                <a href="{% url 'index' %}?category={{ category.id }}" class="text-light no-hover">
+                    {{ category.description }}
+                </a>
+
+                <a href="{% url 'index' %}?category={{ category.id }}" class="d-block p-3 bg-white rounded shadow-sm hover-shadow transition-shadow no-hover">
+                    {{ category.description }}
+                </a>
+            </li>
+        {% empty %}
+            <li class="empty">
+                <p>No category available yet.</p>
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+
+{% endblock %}

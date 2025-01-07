@@ -24,4 +24,5 @@ urlpatterns = [
         views.toggle_watchlist,
         name="toggle_watchlist",
     ),
+    path("categories", views.categories, name="categories"),
 ]
