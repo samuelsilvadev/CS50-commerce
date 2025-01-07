@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,25 +19,25 @@
                     <ul class="navbar-nav">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Listings</a>
+                            <a class="nav-link {% active_class 'index' %}" href="{% url 'index' %}">Listings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'categories' %}">All categories</a>
+                            <a class="nav-link {% active_class 'categories' %}" href="{% url 'categories' %}">All categories</a>
                         </li>
 
                         {% if user.is_authenticated %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'new_listing' %}">
+                                <a class="nav-link {% active_class 'new_listing' %}" href="{% url 'new_listing' %}">
                                     Add new listing
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'auctions_won' %}">
+                                <a class="nav-link {% active_class 'auctions_won' %}" href="{% url 'auctions_won' %}">
                                     Auctions Won
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'watchlist' %}">
+                                <a class="nav-link {% active_class 'watchlist' %}" href="{% url 'watchlist' %}">
                                     Watchlist ({{ watchlist_count }})
                                 </a>
                             </li>
@@ -45,10 +46,10 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                                <a class="nav-link {% active_class 'login' %}" href="{% url 'login' %}">Log In</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                                <a class="nav-link {% active_class 'register' %}" href="{% url 'register' %}">Register</a>
                             </li>
                         {% endif %}
                     </ul>
