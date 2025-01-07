@@ -31,6 +31,11 @@
                     <p class="h6 font-weight-bold text-dark">Minimum Bid: ${{ auction.minimum_bid_value }}</p>
                 </a>
             </li>
+        {% empty %}
+            <li class="empty">
+                <p>No auctions available.</p>
+                <a href="{% url 'new_listing' %}">Create a new listing</a>
+            </li>
         {% endfor %}
     </ul>
 </main>
