@@ -1,5 +1,5 @@
 body {
-    padding: 10px;
+    padding: 0 10px;
 }
 
 :is(.no-hover, .no-hover:hover, .no-hover *:hover) {
