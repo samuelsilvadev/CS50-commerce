@@ -39,7 +39,7 @@
 </style>
 
 <main class="container auction">
-    {% if is_winner %}
+    {% if is_winner and not is_owner %}
         <div class="alert alert-success mb-0 bid" role="alert">
             <p class="h6 font-weight-bold text-dark mb-0">Congratulations your bid won this auction. You'll soon contact you to arrange the next steps.</p>
         </div>
