@@ -9,8 +9,8 @@ def active_class(context, url_name):
     """
     Returns 'active' if the current request path matches the given URL name.
     """
-    request = context['request']
+    request = context["request"]
 
     if request.path == reverse(url_name):
-        return 'active'
-    return ''
+        return "active"
+    return ""
