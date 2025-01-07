@@ -71,6 +71,11 @@
         </ul>
         <h3 class="text-muted mb-2 text-truncate text-dark">{{ auction.description }}</h3>
         <p class="text-muted mb-2 text-truncate text-dark">Start on: {{ auction.start_date }} and end on: {{ auction.end_date }}</p>
+        {% if highest_bid %}
+            <p class="font-weight-bold text-dark">Current price: {{ highest_bid.value }}</p>
+        {% else %}
+            <p class="font-weight-bold text-dark">Current price: {{ auction.minimum_bid_value }}</p>
+        {% endif %}
     </div>
     <div>
         {% if user.is_authenticated %}
