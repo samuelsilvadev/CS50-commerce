@@ -1,8 +1,9 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.utils import timezone
 from decimal import Decimal
 
@@ -28,6 +29,7 @@ def index(request):
     )
 
 
+@login_required
 def auctions_won(request):
     user = request.user
     auctions = Auction.objects.filter(winner=user)
@@ -40,12 +42,22 @@ def login_view(request):
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
+        next = request.POST.get("next")
         user = authenticate(request, username=username, password=password)
 
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+
+            if next is None:
+                return HttpResponseRedirect(reverse("index"))
+
+            try:
+                resolve(next)
+                return HttpResponseRedirect(next)
+            except:
+                return HttpResponseRedirect(reverse("index"))
+
         else:
             return render(
                 request,
@@ -90,6 +102,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@login_required
 def new_listing(request):
     if request.method == "POST":
         title = request.POST.get("title")
@@ -156,6 +169,7 @@ def listing_entry(request, id):
     )
 
 
+@login_required
 def place_bid(request, id):
     auction = Auction.objects.filter(id=id).first()
 
@@ -215,12 +229,14 @@ def not_found(request):
     return render(request, "auctions/404.html")
 
 
+@login_required
 def watchlist(request):
     watchlist_entries = Watchlist.objects.filter(user=request.user)
 
     return render(request, "auctions/watchlist.html", {"entries": watchlist_entries})
 
 
+@login_required
 def toggle_watchlist(request, auction_id):
     if request.method == "POST":
         auction = Auction.objects.filter(id=auction_id).first()
@@ -245,6 +261,7 @@ def toggle_watchlist(request, auction_id):
     return HttpResponseRedirect(reverse("not_found"))
 
 
+@login_required
 def close_auction(request, id):
     if request.method == "POST":
         auction = Auction.objects.filter(id=id).first()
@@ -263,6 +280,7 @@ def close_auction(request, id):
         return HttpResponseRedirect(reverse("listing_entry", args=[id]))
 
 
+@login_required
 def comment(request, id):
     if request.method == "POST":
         auction = Auction.objects.filter(id=id).first()
